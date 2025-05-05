@@ -1,6 +1,9 @@
 import hashlib
 import os
 
+
+from utils import validate_file
+
 '''
 Blob hashing system
 '''
@@ -14,28 +17,12 @@ class Blob:
         
         self.object_id = None
         self.data = None
-
-        
-    @staticmethod
-    def validate_file(file_path: "Blob.file_path"):
-        '''
-        Validation that the file_path given in both storing/loading is valid
-        '''
-        if not os.path.isfile(file_path):
-            raise ValueError(f"Path is not a file, Path: {file_path}")
-        try:
-            with open(file_path, "rb") as f:
-                first_char = f.read(1)
-        except OSError as e:
-            raise IOError(f"File cannot be read, Path = {file_path} \n Exception = {e}")
-
-        if not first_char:
-            raise ValueError(f"File is empty, Path: {file_path}")
         
     #Used to store new blobs
     def store(self) -> "Blob.object_id":
+
         #Validates the file
-        Blob.validate_file(self.file_path)
+        validate_file(self.file_path)
 
         #Reads the data and sets it to the blob-object
         self.data = self._read_data(self.file_path)
@@ -101,7 +88,7 @@ class Blob:
         path = cls.decode_blob_to_path(object_id)
 
         #Validate path exists
-        Blob.validate_file(path)
+        validate_file(path)
 
         #Reads the given path
         with open(path, "rb") as open_blob:
