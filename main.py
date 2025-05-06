@@ -1,5 +1,6 @@
 from repository import initialize_repository
 from blob import Blob
+from tree import Tree
 import os
 
 
@@ -10,11 +11,14 @@ if __name__ == "__main__":
     with open(test_file, "w") as f:
         f.write("hello, this is a test file")
 
-    #Creates the blob obj
-    test_blob = Blob(test_file)
-    #Stores it, and saves it's as the sha256
-    new_test = test_blob.store()
-    #Loads a blob using a SHa256
-    loaded_blob = Blob.load(new_test)
-    #Finds the path to a file using the sha256
-    blob_path = Blob.decode_blob_to_path(new_test)
+    # #Creates the blob obj
+    # test_blob = Blob(test_file)
+    # #Stores it, and saves it's as the sha256
+    # new_test = test_blob.store()
+    # #Loads a blob using a SHa256
+    # loaded_blob = Blob.load(new_test)
+    # #Finds the path to a file using the sha256
+    # blob_path = Blob.decode_blob_to_path(new_test)
+
+    new_tree = Tree("test_repo")
+    new_tree.store()
