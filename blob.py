@@ -2,7 +2,7 @@ import hashlib
 import os
 
 
-from utils import validate_file, make_header, create_obj_id, write_to_disk
+from utils import *
 
 '''
 Blob hashing system
@@ -34,8 +34,11 @@ class Blob:
         self.data = self._read_data(self.file_path)
 
         self.header = make_header("blob", self.data)
-
+        
         self.object_id = create_obj_id(self.header, self.data)
+
+        #Creating the folder and filename for use later
+        self.folder, self.file_name = self.object_id[:2], self.object_id[2:]
 
         BASE_DIR = os.getenv("BASE_DIR", os.getcwd())
 
@@ -44,51 +47,18 @@ class Blob:
         #returns the object_id, for access
         return self.object_id
 
-    def _read_data(self, file_path: "Blob.file_path") -> bytes:
+    def _read_data(self, file_path: str) -> bytes:
         #Reads the file and returns it as bytes
         with open(file_path, "rb") as f:
             data = f.read()
         return data
-    
-    # def create_object_id(self) -> None:
-    #     #uses a  header to encode and hash the file
-    #     self.header = b"blob " + str(len(self.data)).encode("ascii") + b"\0"
-    #     #uses hashlib to hash the file
-    #     self.object_id = hashlib.sha256(self.header + self.data).hexdigest()
-    #     #unpacking the folder and file name
-    #     self.folder, self.file_name = self.object_id[0:2], self.object_id[2:]
-    
-    # def create_path_to_object(self):
-    #     BASE_DIR = os.getenv("BASE_DIR", os.getcwd())
-    #     object_path = os.path.join(BASE_DIR, ".minigit","objects")
-    #     os.makedirs(object_path, exist_ok=True)
-    #     self.path = os.path.join(object_path,self.folder)
-    
-    # def create_new_path(self) -> str:
-    #     '''
-    #     returns self.object_id
-    #     '''
-    #     if os.path.isfile(os.path.join(self.path,self.file_name)):
-    #         return self.object_id
-        
-    #     #creates a new file
-    #     os.makedirs(self.path, exist_ok=True)
 
-    #     #full-link to directory
-    #     directory_name = os.path.join(self.path, self.file_name)
-
-    #     #then creates the file and writes both the header and data
-    #     with open(directory_name, "wb") as out:
-    #         #Writes with the header, to ensure it's being read as a "blob" 
-    #         out.write(self.header + self.data)
-
-    #     return self.object_id
 
 
     @classmethod
-    def load(cls, object_id: "Blob.object_id") -> "Blob":
+    def load(cls, object_id: str) -> "Blob":
         #Decode to path
-        path = cls.decode_blob_to_path(object_id)
+        path = decode_sha_to_path(object_id)
 
         #Validate path exists
         validate_file(path)
@@ -115,12 +85,6 @@ class Blob:
 
         return new
 
-    @classmethod
-    def decode_blob_to_path(cls, object_id: "Blob.object_id") -> "os.path":
-        folder, file_name = object_id[0:2], object_id[2:]
-        BASE_DIR = os.getenv("BASE_DIR", os.getcwd())
-        object_path = os.path.join(BASE_DIR, ".minigit","objects")
-        return os.path.join(object_path, folder, file_name)
 
 
     def __str__(self):

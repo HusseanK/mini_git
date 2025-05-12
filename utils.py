@@ -9,6 +9,20 @@ import os
 import hashlib
 
 
+
+def decode_sha_to_path(object_id: str) -> str:
+    '''
+    Takes in a sha and returns a filepath based on the base_dir
+    
+    :args: 
+        object_id: a SHA256 in str
+    '''
+    folder, file_name = object_id[0:2], object_id[2:]
+    BASE_DIR = os.getenv("BASE_DIR", os.getcwd())
+    object_path = os.path.join(BASE_DIR, ".minigit","objects")
+    return os.path.join(object_path, folder, file_name)
+
+
 def make_header(tag: str, body: bytes) -> bytes:
     '''
     Creates the header and returns as bytes
@@ -42,7 +56,7 @@ def write_to_disk(BASE_DIR: str, obj_id: str, obj_bytes: bytes) -> None:
     Args:
         BASE_DIR(str): the base directory
         obj_id(str): the sha256 as a string
-        ob_bytes(bytes): the object bytes as bytes (header+data)
+        obj_bytes(bytes): combined header + content
     '''
     folder, file_name = obj_id[:2], obj_id[2:]
     folder_path = os.path.join(BASE_DIR, ".minigit","objects", folder)
@@ -50,11 +64,13 @@ def write_to_disk(BASE_DIR: str, obj_id: str, obj_bytes: bytes) -> None:
     #full-link to directory
     new_file = os.path.join(folder_path, file_name)
     if not os.path.exists(new_file):
-        #then creates the file and writes both the header and data
-        with open(new_file, "wb") as out:
-            #Writes with the header, to ensure it's being read as a "blob" 
-            out.write(obj_bytes)
-
+        try:
+            #then creates the file and writes both the header and data
+            with open(new_file, "wb") as out:
+                #Writes with the header, to ensure it's being read as a "blob" 
+                out.write(obj_bytes)
+        except OSError as e:
+            raise IOError(f"Could not write ojbect to disk: {new_file}\n{e}") from e
 
 
 def validate_file(file_path: str) -> None:
