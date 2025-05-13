@@ -1,7 +1,0 @@
-.venv/
-.mini_git.egg-info/
-__pycache__/
-test_repo/
-self_test.py
-
-*.py[cod]
