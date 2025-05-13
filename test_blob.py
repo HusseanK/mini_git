@@ -1,15 +1,18 @@
 import unittest
 import os
+import shutil
 from random import randrange
 
 from blob import Blob
 
 #Unittesting for my blob-class
 class TestBlob(unittest.TestCase):
-    os.environ["BASE_DIR"] = "test_blobs"
+
+    repo_dir = os.environ["BASE_DIR"] = "test_blobs"
     #just setting a random num str at the end of a test document, to add randomness
     random_num = str(randrange(0, 300))
     #uses the hook method setUp to create a new test.txt file
+
     def setUp(self):
         self.test_file = "test.txt"
         with open(self.test_file, "w") as f:
@@ -19,6 +22,8 @@ class TestBlob(unittest.TestCase):
     def tearDown(self):
         if os.path.exists(self.test_file):
             os.remove(self.test_file)
+        shutil.rmtree(self.repo_dir)
+
 
     #then tests the blob system
     def test_blob(self):

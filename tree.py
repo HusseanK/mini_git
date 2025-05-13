@@ -129,7 +129,12 @@ class Tree:
 
         #decode data
         body = content[index + 1:]
+        assert int(length) == len(body), f"Body is not {length} long, failure"
+
+
         lines = body.decode("ascii").splitlines()
+
+
         children = []
         for line in lines:
             entry_type, file_name, obj_id = line.strip().split()
@@ -153,6 +158,6 @@ if __name__ == "__main__":
     
     tree_path = os.path.join(f"..\\test_repo")
     new_tree = Tree(tree_path)
-    new_tree.store()
+    tree = new_tree.store()
 
-    Tree.load(new_tree)
+    Tree.load(tree)

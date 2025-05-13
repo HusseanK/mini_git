@@ -72,12 +72,15 @@ class Blob:
         #Decoding into a raw-header to preserve byte-form
         raw_header = content[:index+1]
         header, character_length = raw_header[:-1].decode().split()
+        assert header == "blob", f"Expected blob, got {header}"
 
         #simple match-case to determine where to go, will update later
-        result = content[index+1:index+int(character_length)+1]
+        body = content[index+1:index+int(character_length)+1]
+
+        assert int(character_length) == len(body), f"Body is not {character_length} long, failure"
 
         new = cls.__new__(cls)
-        new.data = result
+        new.data = body
         new.header = header
         new.object_id = object_id
         new.path = path

@@ -31,5 +31,3 @@ if __name__ == "__main__":
         empty_test_blob.store()
     except Exception as e:
         print(e)
-
-
