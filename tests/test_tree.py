@@ -2,9 +2,9 @@ import os
 import shutil
 import unittest
 
-from tree import Tree
-from utils import decode_sha_to_path
-from repository import initialize_repository
+from mini_git import Tree
+from mini_git import decode_sha_to_path
+from mini_git import Repository
 
 class TestTree(unittest.TestCase):
     
@@ -15,7 +15,7 @@ class TestTree(unittest.TestCase):
             shutil.rmtree(self.repo_dir)
         
         os.makedirs(self.repo_dir)
-        initialize_repository(self.repo_dir)
+        Repository(self.repo_dir)
 
         with open(os.path.join(self.repo_dir, "file1.txt"), "w") as f:
             f.write("this is file 1")

@@ -1,10 +1,11 @@
-from main import *
+from mini_git.main import *
 '''Testing repo/main functionality'''
 
 
 
 if __name__ == "__main__":
-    file_path = initialize_repository("test_repo")
+    new_repo = Repository("test_repo")
+    file_path = new_repo.dir_path
     #Random tests below
     empty_test_file = os.path.join(file_path, "test_file_empty.txt")
 

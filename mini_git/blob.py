@@ -1,8 +1,6 @@
-import hashlib
 import os
 
-
-from utils import *
+from mini_git.utils import validate_file, make_header, create_obj_id, write_to_disk, decode_sha_to_path
 
 '''
 Blob hashing system

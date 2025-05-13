@@ -1,8 +1,8 @@
 import os
 import datetime
 
-from utils import *
-from tree import Tree
+from mini_git.utils import *
+from mini_git.tree import Tree
 
 
 class Commit:

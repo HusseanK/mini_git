@@ -1,9 +1,7 @@
 import os
-import hashlib
 
-
-from blob import Blob
-from utils import *
+from mini_git.blob import Blob
+from mini_git.utils import *
 
 class Tree:
     '''

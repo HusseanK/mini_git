@@ -3,7 +3,7 @@ import os
 import shutil
 from random import randrange
 
-from blob import Blob
+from mini_git import Blob
 
 #Unittesting for my blob-class
 class TestBlob(unittest.TestCase):

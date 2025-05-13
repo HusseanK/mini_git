@@ -1,11 +1,14 @@
-from repository import initialize_repository
-from blob import Blob
-from tree import Tree
 import os
+
+from mini_git.repository import Repository
+from mini_git.blob import Blob
+from mini_git.tree import Tree
+
 
 
 if __name__ == "__main__":
-    file_path = initialize_repository("test_repo")
+    new_repo = Repository("test_repo")
+    file_path = new_repo.dir_path
     test_file = os.path.join(file_path, "test_file.txt")
 
     with open(test_file, "w") as f:
