@@ -1,2 +1,0 @@
-mini_git
-tests
