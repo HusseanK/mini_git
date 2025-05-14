@@ -87,25 +87,51 @@ class Repository:
         
 
 
-    def commit(self, author: str, msg: str = None) -> list[tuple]:
+    def commit(self, author: str, msg: str = None) -> str:
+        '''
+        Create a new commit from entries.
+
+        Args:
+            author: Name/Email
+            msg: The commit message
+        
+        Raises:
+            FileNotFoundError: If the staging index doesn't exist
+            Runtime Error: If no entries are staged
+
+        
+        Returns:
+            The Sha-256 object id of the new commit
+        '''
+
 
         #Read the index of staged entries
         index_path = os.path.join(self.dir_path, ".minigit", "index")
+        if not os.path.exists(index_path):
+            raise FileNotFoundError(f"Path does not exist: {index_path}, please run add() first")
+        
         with open(index_path, "r") as f:
             data = f.read().splitlines()
 
-        #breakdown each tuple in data
-        result_line = [tuple(line.split(" ", 2)) for line in data]
+        #Make sure something is actually ready to be committed
+        if not data:
+            raise RuntimeError("Nothing staged, run add() first")
 
-        index_tree = Tree.from_index(self.dir_path, result_line)
+        #breakdown each tuple in data (type, relative_path, sha)
+        entries = [tuple(line.split(" ", 2)) for line in data]
+
+        #Create new tree and then store
+        index_tree = Tree.from_index(self.dir_path, entries)
         root_tree_sha = index_tree.store()
 
-        c  = Commit(self.dir_path, author, msg)
-        commit_sha = c.store(root_tree_sha)
+        commit_obj = Commit(self.dir_path, author, msg)
+        commit_sha = commit_obj.store(root_tree_sha)
 
-        open(os.path.join(self.dir_path, ".minigit", "index"), "w").close()
+        #empty the index for the next commit
+        open(index_path, "w").close()
 
         return commit_sha
+    
 
     def log(self, n=None):
         pass
