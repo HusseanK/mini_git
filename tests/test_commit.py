@@ -37,7 +37,7 @@ class TestCommit(unittest.TestCase):
     def test_commit_store_and_load(self):
         #Create a commit, store and load it, with assertion tests
         commit = Commit(self.repo_dir, "test", commit_message = "this is a test")
-        object_id = commit.store()
+        object_id = commit.store(commit)
         
         #Assert that it exists
         self.assertIsNotNone(object_id)

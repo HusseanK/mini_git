@@ -27,6 +27,7 @@ class Commit:
             data = f"Tree:{self.tree_sha}\nDate:{self.date_time}\nAuthor:{self.author}\nMessage:{self.commit_message}"
         return data
     
+    
     def get_parent_sha(self, BASE_DIR):
 
         head_path = os.path.join(BASE_DIR, ".minigit", "HEAD")
@@ -71,7 +72,7 @@ class Commit:
             f.write(self.object_id)
         #Resetting
         self.parent_sha = None
-        
+
         return self.object_id
     
     @classmethod

@@ -18,6 +18,38 @@ class Tree:
         if self.tree_path is None:
             raise ValueError("Must provide a path to a project")
     
+
+    @classmethod
+    def from_index(cls, base_path: str, entries: list[tuple]) -> "Tree":
+        '''
+        Build a tree from a list of entries
+
+        :entries: List of (type, relative_path, object_id)
+        '''
+        tree = cls.__new__(cls)
+        tree.tree_path = base_path
+        tree.children = []
+
+        staged = {}
+
+        for path_type, relative_path, sha in entries:
+            parts = relative_path.split(os.sep, 1)
+            name = parts[0]
+            rest = parts[1] if len(parts) > 1 else None
+
+            if rest:
+                staged.setdefault(name, []).append((path_type, rest, sha))
+            else:
+                tree.children.append((path_type, name, sha))
+                
+        for name, sub_entries in staged.items():
+            sub_base = os.path.join(base_path, name)
+            sub_tree = cls.from_index(sub_base, sub_entries)
+            tree.children.append(("tree", name, sub_tree.store()))
+        
+        return tree
+
+
     def store(self) -> str:
         '''
         Used to store tree objects
