@@ -45,22 +45,20 @@ class Commit:
 
         return parent_sha
 
-    def store(self):
+    def store(self, tree_sha: str) -> str:
         #Validate again
         validate_directory(self.dir_path)
 
+        #set tree sha of the commit
+        self.tree_sha = tree_sha
+
         #Set Base Dir
         BASE_DIR = os.getenv("BASE_DIR", os.getcwd())
-
-        #Create new tree for the dir, returning the SHA
-        self.tree_sha = Tree(self.dir_path).store()
-
         #Grab the parent sha if it exists, from minigit/refs/heads/master
         self.parent_sha = self.get_parent_sha(BASE_DIR)
 
         #Set the data
         self.data = self.create_data()
-
         #Encode body
         self.body = self.data.encode("ascii")
         #Create header and object id
@@ -73,6 +71,7 @@ class Commit:
             f.write(self.object_id)
         #Resetting
         self.parent_sha = None
+        
         return self.object_id
     
     @classmethod
