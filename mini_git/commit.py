@@ -77,6 +77,9 @@ class Commit:
     
     @classmethod
     def load(cls, object_id):
+        '''
+        Returns a commit object based on an object id(sha)
+        '''
         path = decode_sha_to_path(object_id)
 
         validate_file(path)
